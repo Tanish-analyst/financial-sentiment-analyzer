@@ -5,7 +5,6 @@ import pandas as pd
 import time
 import plotly.graph_objects as go
 import matplotlib.pyplot as plt
-from dotenv import load_dotenv
 import os
 from datetime import datetime, timedelta
 from collections import Counter
@@ -26,9 +25,8 @@ st.markdown(
 st.markdown("Analyze recent news sentiment for any public company using a fine-tuned FinBERT model.")
 
 # ---------------------- API Keys ----------------------
-load_dotenv("qwerty.env")
-finnhub_api_key = os.getenv("finnhub_api")                          # For security purposes, API keys have been hidden
-alpha_api_key = os.getenv("alpha_api")
+finnhub_api_key = st.secrets["finnhub_api"]                    # For security purposes, API keys have been hidden
+alpha_api_key = st.secrets["alpha_api"]
 
 # ---------------------- Load FinBERT Model ----------------------
 def load_finbert_pipeline():
