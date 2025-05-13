@@ -29,12 +29,18 @@ finnhub_api_key = st.secrets["finnhub_api"]                    # For security pu
 alpha_api_key = st.secrets["alpha_api"]
 
 # ---------------------- Load FinBERT Model ----------------------
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
+
 def load_finbert_pipeline():
     model = AutoModelForSequenceClassification.from_pretrained(
-        "kkkkkjjjjjj/results", low_cpu_mem_usage=False
+        "kkkkkjjjjjj/results",
+        device_map="cpu",               # ✅ Force CPU
+        low_cpu_mem_usage=False,        # Optional, disable if causing issues
+        torch_dtype="auto"              # Optional, safe fallback
     )
     tokenizer = AutoTokenizer.from_pretrained("kkkkkjjjjjj/results")
-    return pipeline("sentiment-analysis", model=model, tokenizer=tokenizer, device=-1)
+    return pipeline("sentiment-analysis", model=model, tokenizer=tokenizer, device=-1)  # ✅ device=-1 means CPU
+
 
 finbert = load_finbert_pipeline()
 
