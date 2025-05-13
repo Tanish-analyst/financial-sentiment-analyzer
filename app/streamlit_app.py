@@ -29,26 +29,19 @@ finnhub_api_key = st.secrets["finnhub_api"]                    # For security pu
 alpha_api_key = st.secrets["alpha_api"]
 
 # ---------------------- Load FinBERT Model ----------------------
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
-import torch
-
 def load_finbert_pipeline():
-    # Explicitly load with safetensors
-    model = AutoModelForSequenceClassification.from_pretrained(
-        "kkkkkjjjjjj/results",
-        use_safetensors=True,  # Explicitly enable safetensors
-        device_map="auto"     # Let transformers handle device placement
-    )
-    
-    tokenizer = AutoTokenizer.from_pretrained("kkkkkjjjjjj/results")
-    
+    try:
+        model = AutoModelForSequenceClassification.from_pretrained("kkkkkjjjjjj/results")
+        tokenizer = AutoTokenizer.from_pretrained("kkkkkjjjjjj/results")
+    except Exception as e:
+        print(f"Encountered difficulty loading model/tokenizer from '{MODEL_ID}': {e}")
+        print("Falling back to 'ProsusAI/finbert'")
+        model = AutoModelForSequenceClassification.from_pretrained("ProsusAI/finbert")
+        tokenizer = AutoTokenizer.from_pretrained("ProsusAI/finbert")
     return pipeline(
         "sentiment-analysis",
         model=model,
-        tokenizer=tokenizer,
-        device=0 if torch.cuda.is_available() else -1
-    )
+        tokenizer=tokenizer) 
 
 
 finbert = load_finbert_pipeline()
