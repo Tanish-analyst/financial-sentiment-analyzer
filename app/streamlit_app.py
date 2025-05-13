@@ -30,11 +30,14 @@ alpha_api_key = st.secrets["alpha_api"]
 
 # ---------------------- Load FinBERT Model ----------------------
 def load_finbert_pipeline():
-    model = AutoModelForSequenceClassification.from_pretrained("kkkkkjjjjjj/results")
+    model = AutoModelForSequenceClassification.from_pretrained(
+        "kkkkkjjjjjj/results", low_cpu_mem_usage=False
+    )
     tokenizer = AutoTokenizer.from_pretrained("kkkkkjjjjjj/results")
-    return pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)
+    return pipeline("sentiment-analysis", model=model, tokenizer=tokenizer, device=-1)
 
 finbert = load_finbert_pipeline()
+
 
 # ---------------------- Alpha Vantage Function ----------------------
 def fetch_alpha_vantage(symbol, api_key):
