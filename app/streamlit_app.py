@@ -32,14 +32,9 @@ alpha_api_key = st.secrets["alpha_api"]
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
 
 def load_finbert_pipeline():
-    model = AutoModelForSequenceClassification.from_pretrained(
-        "kkkkkjjjjjj/results",
-        device_map="cpu",               # ✅ Force CPU
-        low_cpu_mem_usage=False,        # Optional, disable if causing issues
-        torch_dtype="auto"              # Optional, safe fallback
-    )
+    model = AutoModelForSequenceClassification.from_pretrained("kkkkkjjjjjj/results")
     tokenizer = AutoTokenizer.from_pretrained("kkkkkjjjjjj/results")
-    return pipeline("sentiment-analysis", model=model, tokenizer=tokenizer, device=-1)  # ✅ device=-1 means CPU
+    return pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)  # ✅ device=-1 means CPU
 
 
 finbert = load_finbert_pipeline()
