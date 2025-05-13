@@ -30,11 +30,25 @@ alpha_api_key = st.secrets["alpha_api"]
 
 # ---------------------- Load FinBERT Model ----------------------
 from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, pipeline
+import torch
 
 def load_finbert_pipeline():
-    model = AutoModelForSequenceClassification.from_pretrained("kkkkkjjjjjj/results")
+    # Explicitly load with safetensors
+    model = AutoModelForSequenceClassification.from_pretrained(
+        "kkkkkjjjjjj/results",
+        use_safetensors=True,  # Explicitly enable safetensors
+        device_map="auto"     # Let transformers handle device placement
+    )
+    
     tokenizer = AutoTokenizer.from_pretrained("kkkkkjjjjjj/results")
-    return pipeline("sentiment-analysis", model=model, tokenizer=tokenizer)  # ✅ device=-1 means CPU
+    
+    return pipeline(
+        "sentiment-analysis",
+        model=model,
+        tokenizer=tokenizer,
+        device=0 if torch.cuda.is_available() else -1
+    )
 
 
 finbert = load_finbert_pipeline()
