@@ -9,4 +9,4 @@ torch==2.2.2
 sentencepiece==0.2.0
 protobuf==3.20.3
 accelerate>=0.27.0
-numpy>=1.24.0
+numpy>=1.21.0,<2.0.0
