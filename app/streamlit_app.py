@@ -13,7 +13,6 @@ import torch
 from transformers import logging as transformers_logging
 
 # ---------------------- Initial Setup ----------------------
-# Reduce verbosity of transformers library
 transformers_logging.set_verbosity_error()
 
 # ---------------------- Streamlit Setup ----------------------
@@ -38,7 +37,6 @@ alpha_api_key = st.secrets["alpha_api"]
 @st.cache_resource(show_spinner=False)
 def load_finbert_pipeline():
     try:
-        # Try loading your fine-tuned model first
         model_name = "kkkkkjjjjjj/results"
         model = AutoModelForSequenceClassification.from_pretrained(
             model_name,
@@ -47,17 +45,15 @@ def load_finbert_pipeline():
         )
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         
-        # Ensure model is on CPU (safer for Streamlit Cloud)
         model = model.to('cpu')
-        
-        # Create pipeline with proper configuration
-        return pipeline(
-            "text-classification",
-            model=model,
-            tokenizer=tokenizer,
-            device=-1,  # Force CPU usage
-            return_all_scores=False
-        )
+
+    return pipeline(
+        "text-classification",
+        model=model,
+        tokenizer=tokenizer,
+        device=-1,
+        top_k=1,  
+        framework="pt"  )
     except Exception as e:
         st.error(f"Error loading fine-tuned model: {str(e)}")
         st.warning("Falling back to default FinBERT model")
@@ -71,7 +67,7 @@ def load_finbert_pipeline():
             st.error(f"Failed to load fallback model: {str(fallback_error)}")
             return None
 
-# Initialize the model
+
 try:
     with st.spinner("Loading sentiment analyzer..."):
         finbert = load_finbert_pipeline()
@@ -133,7 +129,6 @@ def get_financial_news_sentiment(symbol: str, date_range_days: int, api_key: str
 
         headlines_only = [h for h, _ in filtered_articles]
         
-        # Process in batches to avoid memory issues
         batch_size = 8
         results = []
         for i in range(0, len(headlines_only), batch_size):
@@ -193,7 +188,7 @@ with tab1:
         single_ticker_input = st.text_input("", placeholder="e.g., AAPL", key="single_ticker").upper()
     with col2:
         st.markdown("### Date range")
-        date_range_single = st.selectbox("", options=list(date_map.keys()), index=0, key="date_range_single")
+        date_range_single = st.selectbox("Date range",  options=list(date_map.keys()),index=0,key="date_range_single",label_visibility="collapsed")
 
     analyze_single_btn = st.button("Analyze", type="primary", key="analyze_single")
 
