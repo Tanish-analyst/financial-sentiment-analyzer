@@ -125,7 +125,7 @@ def get_financial_news_sentiment(symbol: str, date_range_days: int, api_key: str
         if not data:
             return pd.DataFrame(), {}
 
-        articles = [(item.get('headline', ''), item.get('url', '')] for item in data if 'headline' in item]
+        articles = [(item.get('headline', ''), item.get('url', '')) for item in data if 'headline' in item]
         filtered_articles = [(h, url) for h, url in articles if h and symbol.lower() in h.lower() and '?' not in h]
 
         if not filtered_articles:
