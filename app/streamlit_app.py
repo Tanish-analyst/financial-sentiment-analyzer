@@ -52,8 +52,7 @@ def load_finbert_pipeline():
             model=model,
             tokenizer=tokenizer,
             device=-1,
-            top_k=1,  
-            framework="pt"  )
+            return_all_scores=False)
     
     except Exception as e:
         st.error(f"Error loading fine-tuned model: {str(e)}")
