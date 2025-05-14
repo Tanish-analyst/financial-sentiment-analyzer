@@ -46,14 +46,15 @@ def load_finbert_pipeline():
         tokenizer = AutoTokenizer.from_pretrained(model_name)
         
         model = model.to('cpu')
-
-    return pipeline(
-        "text-classification",
-        model=model,
-        tokenizer=tokenizer,
-        device=-1,
-        top_k=1,  
-        framework="pt"  )
+        
+        return pipeline(
+            "text-classification",
+            model=model,
+            tokenizer=tokenizer,
+            device=-1,
+            top_k=1,  
+            framework="pt"  )
+    
     except Exception as e:
         st.error(f"Error loading fine-tuned model: {str(e)}")
         st.warning("Falling back to default FinBERT model")
